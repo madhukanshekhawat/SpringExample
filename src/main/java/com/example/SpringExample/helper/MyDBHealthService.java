@@ -4,8 +4,9 @@ import org.springframework.boot.actuate.health.Health;
 import org.springframework.boot.actuate.health.HealthIndicator;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Service;
 
-@Controller
+@Service
 public class MyDBHealthService implements HealthIndicator {
 
     public static final String DB_SERVICE = "Database Service";
