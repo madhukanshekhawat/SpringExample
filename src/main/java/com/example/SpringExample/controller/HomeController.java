@@ -10,9 +10,6 @@ import java.util.Map;
 @RestController
 public class HomeController {
 
-    @Autowired
-    private Student student;
-
     @GetMapping("/get-data")
     public Map<String, String> getData(){
         return Map.of("Name","Madhu Shekahawat");
