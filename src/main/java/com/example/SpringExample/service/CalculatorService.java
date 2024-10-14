@@ -7,10 +7,16 @@ public class CalculatorService {
     }
 
     public static int productTwoNumbers(int a , int b){
+        if(b==0){
+            throw new IllegalArgumentException("Multiplier can't be zero");
+        }
         return a*b;
     }
 
     public static double divideTwoNumbers(int a , int b){
+        if(b==0){
+            throw new IllegalArgumentException("Divisor can't be zero");
+        }
         return a/b;
     }
 
