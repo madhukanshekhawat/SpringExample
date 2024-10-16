@@ -2,11 +2,12 @@ package com.example.SpringExample.service;
 
 import com.example.SpringExample.entity.Employee;
 import com.example.SpringExample.repository.EmployeeRepository;
-import jakarta.transaction.Transactional;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class EmployeeServiceImpl implements EmployeeService{
 
     private EmployeeRepository employeeRepository;
@@ -19,7 +20,7 @@ public class EmployeeServiceImpl implements EmployeeService{
     public Employee saveEmployee(Employee employee) {
         Optional<Employee> savedEmployee = employeeRepository.findByEmail(employee.getEmail());
         if(savedEmployee.isPresent()){
-            throw new ResourceNotFoundException("Employee already exist with given email:" + employee.getEmail());
+            throw new ResourceAlreadyExistsException("Employee already exist with given email:" + employee.getEmail());
         }
         return employeeRepository.save(employee);
     }
