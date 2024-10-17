@@ -5,7 +5,6 @@ import com.example.SpringExample.repository.EmployeeRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService{
@@ -18,10 +17,10 @@ public class EmployeeServiceImpl implements EmployeeService{
 
     @Override
     public Employee saveEmployee(Employee employee) {
-        Optional<Employee> savedEmployee = employeeRepository.findByEmail(employee.getEmail());
-        if(savedEmployee.isPresent()){
-            throw new ResourceAlreadyExistsException("Employee already exist with given email:" + employee.getEmail());
-        }
+         employeeRepository.findByEmail(employee.getEmail())
+                .orElseThrow(() -> {
+                    throw new ResourceAlreadyExistsException( "Employee already exists with given email: " + employee.getEmail());
+                });
         return employeeRepository.save(employee);
     }
 
@@ -31,8 +30,9 @@ public class EmployeeServiceImpl implements EmployeeService{
     }
 
     @Override
-    public Optional<Employee> getEmployeeById(long id) {
-        return employeeRepository.findById(id);
+    public Employee getEmployeeById(long id) {
+        return employeeRepository.findById(id)
+                .orElseThrow( () -> new ResourceNotFoundException(" Employee not found with id: "+ id));
     }
 
     @Override
@@ -42,6 +42,8 @@ public class EmployeeServiceImpl implements EmployeeService{
 
     @Override
     public void deleteEmployee(long id) {
+        Employee employee = employeeRepository.findById(id)
+                .orElseThrow(()-> new ResourceNotFoundException("Employee not found with id: "+ id));
         employeeRepository.deleteById(id);
     }
 }

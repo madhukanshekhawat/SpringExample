@@ -66,6 +66,10 @@ public class Employee {
         this.email = email;
     }
 
+    public Employee get() {
+        return null;
+    }
+
     public static class Builder{
 
         private Long id;

@@ -4,6 +4,7 @@ import com.example.SpringExample.entity.Employee;
 import com.example.SpringExample.repository.EmployeeRepository;
 import com.example.SpringExample.service.EmployeeServiceImpl;
 import com.example.SpringExample.service.ResourceAlreadyExistsException;
+import com.example.SpringExample.service.ResourceNotFoundException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -43,7 +44,7 @@ public class EmployeeServiceImplTest {
         ArgumentCaptor<Employee> captor = ArgumentCaptor.forClass(Employee.class);
         verify(employeeRepository).save(captor.capture());
         Employee capturedEmployee = captor.getValue();
-        Assertions.assertEquals("mkshekhawat47@gmail.com", capturedEmployee.getEmail());
+        Assertions.assertEquals(employee.getEmail(), capturedEmployee.getEmail());
         verify(employeeRepository).findByEmail(eq("mkshekhawat47@gmail.com"));
     }
 
@@ -68,13 +69,13 @@ public class EmployeeServiceImplTest {
     }
 
     @Test
-    void testGetEmployeeById_ExistingEmployee(){
-        long employeeId = 1L;
-        when(employeeRepository.findById(employeeId)).thenReturn(Optional.of(employee));
-        Optional<Employee> foundEmployee = employeeService.getEmployeeById(employeeId);
-        Assertions.assertTrue(foundEmployee.isPresent());
-        Assertions.assertEquals(employee.getFirstName(),foundEmployee.get().getFirstName());
-        Assertions.assertEquals(employee.getLastName(), foundEmployee.get().getLastName());
+    void testGetEmployeeById_ExistingEMployee(){
+       when(employeeRepository.findById(1L)).thenReturn(Optional.of(employee));
+       Employee result = employeeService.getEmployeeById(1L);
+       Assertions.assertNotNull(result);
+       Assertions.assertEquals(employee.getFirstName(), result.getFirstName());
+       Assertions.assertEquals(employee.getLastName(), result.getLastName());
+       Assertions.assertEquals(employee.getEmail(),result.getEmail());
     }
 
     @Test
@@ -91,5 +92,13 @@ public class EmployeeServiceImplTest {
         doNothing().when(employeeRepository).deleteById(employeeId);
         employeeService.deleteEmployee(employeeId);
         verify(employeeRepository, times(1)).deleteById(employeeId);
+    }
+
+    @Test
+    void testDeleteEmployee_EmployeeNotFound(){
+        long employeeId = 1L;
+        when(employeeRepository.findById(employeeId)).thenReturn(Optional.empty());
+        ResourceNotFoundException exception = Assertions.assertThrows(ResourceNotFoundException.class, () -> employeeService.deleteEmployee(employeeId));
+        Assertions.assertEquals("Employee not found with id: 1", exception.getMessage());
     }
 }

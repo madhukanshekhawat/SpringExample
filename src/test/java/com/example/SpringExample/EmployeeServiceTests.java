@@ -46,6 +46,7 @@ public class EmployeeServiceTests {
 //        MockitoAnnotations.openMocks(this);
 //    }
 
+
     @DisplayName("JUnit test for saveEmployee method")
     @Test
     public void givenEmployeeObject_whenSaveEmployee_thenReturnEmployeeObject(){
@@ -57,7 +58,6 @@ public class EmployeeServiceTests {
         Employee savedEmployee = employeeService.saveEmployee(employee);
 
         Assertions.assertNotNull(savedEmployee);
-        System.out.println("Test Case Executed");
     }
 
     @DisplayName("JUnit test for getEmployeeById method")
